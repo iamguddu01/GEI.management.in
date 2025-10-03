@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en" data-role="teacher">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Teacher • Global Educational Institute</title>
+    <link rel="stylesheet" href="/site.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <img src="logo_1636033888.webp" alt="GEI Logo" class="logo">
+        <span>Global Educational Institute</span>
+      </div>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="student.html">Student</a>
+        <a href="teacher.html">Teacher</a>
+        <a id="nav-login" href="login.html">Login</a>
+        <a id="nav-logout" href="#" style="display:none">Logout</a>
+      </nav>
+    </header>
+    <main class="container">
+      <h2>Teacher Dashboard</h2>
+      <form id="add-form" class="form">
+        <label>Type
+          <select id="input-kind" required>
+            <option value="notes">Notes</option>
+            <option value="syllabus">Syllabus</option>
+            <option value="notices">Notices</option>
+          </select>
+        </label>
+        <label>Title
+          <input id="input-title" type="text" placeholder="Enter title" required>
+        </label>
+        <label>Link (URL) or leave empty for text notice
+          <input id="input-url" type="url" placeholder="https://...">
+        </label>
+        <label>Notice Text (if no link)
+          <input id="input-text" type="text" placeholder="Short notice text">
+        </label>
+        <button type="submit">Add</button>
+      </form>
+
+      <div class="grid">
+        <section>
+          <h3>Notes</h3>
+          <ul id="list-notes"></ul>
+        </section>
+        <section>
+          <h3>Syllabus</h3>
+          <ul id="list-syllabus"></ul>
+        </section>
+        <section>
+          <h3>Notices</h3>
+          <ul id="list-notices"></ul>
+        </section>
+      </div>
+
+      <div class="form" style="margin-top:16px">
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button id="btn-export" type="button">Export Data (JSON)</button>
+          <label style="display:flex;align-items:center;gap:8px">Import
+            <input id="input-import" type="file" accept="application/json">
+          </label>
+          <button id="btn-clear" type="button">Clear All</button>
+        </div>
+      </div>
+    </main>
+    <footer class="footer">© 2025 Global Educational Institute</footer>
+    <script src="/app.js"></script>
+  </body>
+</html>
+
+

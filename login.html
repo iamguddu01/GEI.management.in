@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login • Global Educational Institute</title>
+    <link rel="stylesheet" href="/site.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <img src="logo_1636033888.webp" alt="GEI Logo" class="logo">
+        <span>Global Educational Institute</span>
+      </div>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="student.html">Student</a>
+        <a href="teacher.html">Teacher</a>
+        <a id="nav-login" href="login.html">Login</a>
+        <a id="nav-logout" href="#" style="display:none">Logout</a>
+      </nav>
+    </header>
+    <main class="container">
+      <h2>Login</h2>
+      <form id="login-form" class="form">
+        <label>Role
+          <select id="role-select" required>
+            <option value="student">Student</option>
+            <option value="teacher">Teacher</option>
+          </select>
+        </label>
+        <label>Teacher Passcode (only if Teacher)
+          <input type="password" id="teacher-passcode" placeholder="Enter passcode">
+        </label>
+        <button type="submit">Continue</button>
+      </form>
+      <p class="muted">Note: This demo uses only front-end storage. For real auth, a backend is required.</p>
+    </main>
+    <footer class="footer">© 2025 Global Educational Institute</footer>
+    <script src="/app.js"></script>
+  </body>
+</html>
+
+
