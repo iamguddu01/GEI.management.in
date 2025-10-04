@@ -14,9 +14,16 @@ label{display:grid;gap:6px}
 input,select,button{padding:10px 12px;border-radius:8px;border:1px solid #374151;background:#0b1223;color:var(--text)}
 button{cursor:pointer;background:linear-gradient(135deg,var(--accent),var(--accent2));border:0}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:20px}
+@media (max-width: 768px) {
+  .grid{grid-template-columns:1fr;gap:12px}
+  .container{padding:0 12px}
+  li{flex-direction:column;align-items:stretch;gap:4px}
+  li .muted{margin-left:0;margin-top:4px}
+  li button{margin-left:0;margin-top:4px;align-self:flex-start}
+}
 section{background:var(--panel);border:1px solid #1f2937;border-radius:10px;padding:12px}
 ul{list-style:none;padding:0;margin:0}
-li{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1f2937}
+li{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid #1f2937;word-wrap:break-word;overflow-wrap:break-word}
 li:last-child{border-bottom:0}
 .inline{display:inline}
 .muted{color:var(--muted);font-size:.85em;margin-left:8px}
@@ -25,4 +32,13 @@ li:last-child{border-bottom:0}
 .flash .error{background:#7f1d1d;color:#fee2e2}
 .flash .success{background:#064e3b;color:#d1fae5}
 .footer{text-align:center;color:var(--muted);padding:24px}
+/* Student section link styling */
+[data-role="student"] a{color:var(--text);text-decoration:none}
+[data-role="student"] a:hover{color:var(--text);opacity:0.8}
+
+/* Content overflow fixes */
+li > div{flex:1;min-width:0;overflow:hidden}
+li a{display:block;word-wrap:break-word;overflow-wrap:break-word;max-width:100%}
+li .muted{flex-shrink:0;white-space:nowrap;margin-left:8px}
+li button{flex-shrink:0;margin-left:8px}
 

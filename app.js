@@ -28,9 +28,36 @@
       const li = document.createElement('li');
       const left = document.createElement('div'); left.style.display = 'flex'; left.style.alignItems = 'center';
       const title = document.createElement('a');
-      if (it.url) { title.href = it.url; title.target = '_blank'; title.rel = 'noopener'; title.textContent = it.title; }
-      else { title.href = '#'; title.onclick = (e) => e.preventDefault(); title.textContent = it.title + (it.text ? ' — ' + it.text : ''); }
-      const meta = document.createElement('span'); meta.className = 'muted'; meta.textContent = ' ' + it.createdAt;
+      if (it.url) { 
+        // Check if it's a base64 file or regular URL
+        if (it.url.startsWith('data:')) {
+          // It's a base64 file - make it downloadable
+          title.href = it.url; 
+          title.download = it.title;
+          title.textContent = it.title;
+        } else {
+          // It's a regular URL
+          title.href = it.url; 
+          title.target = '_blank'; 
+          title.rel = 'noopener'; 
+          title.textContent = it.title;
+        }
+      } else { 
+        title.href = '#'; 
+        title.onclick = (e) => e.preventDefault(); 
+        title.textContent = it.title + (it.text ? ' — ' + it.text : ''); 
+      }
+      const meta = document.createElement('span'); 
+      meta.className = 'muted'; 
+      let metaText = ' ' + it.createdAt;
+      if (it.fileType) {
+        metaText += ` • ${it.fileType}`;
+      }
+      if (it.fileSize) {
+        const sizeKB = Math.round(it.fileSize / 1024);
+        metaText += ` • ${sizeKB}KB`;
+      }
+      meta.textContent = metaText;
       left.appendChild(title); left.appendChild(meta); li.appendChild(left);
       if (document.documentElement.getAttribute('data-role') === 'teacher') {
         const btn = document.createElement('button'); btn.textContent = 'Delete'; btn.onclick = () => { removeItem(kind, idx); renderAll(); }; li.appendChild(btn);
@@ -94,29 +121,50 @@
       addItem(kind, { title, url: url || null, text: text || null, createdAt: nowIso() });
       form.reset(); renderAll();
     });
-    const btnExport = document.getElementById('btn-export');
-    const inputImport = document.getElementById('input-import');
+    const inputUploadNotes = document.getElementById('input-upload-notes');
+    const inputUploadSyllabus = document.getElementById('input-upload-syllabus');
     const btnClear = document.getElementById('btn-clear');
-    if (btnExport) {
-      btnExport.onclick = () => {
-        const blob = new Blob([JSON.stringify(getData(), null, 2)], { type: 'application/json' });
-        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'gei_data.json'; a.click(); URL.revokeObjectURL(a.href);
+    
+    // Function to handle file uploads
+    const handleFileUpload = async (files, category) => {
+      if (!files || files.length === 0) return;
+      
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const fileName = file.name;
+        
+        // Convert file to base64 for storage
+        const fileContent = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.readAsDataURL(file);
+        });
+        
+        // Add the uploaded file to the specified category
+        addItem(category, { 
+          title: fileName, 
+          url: fileContent, // Store base64 data instead of blob URL
+          text: `Uploaded file: ${fileName}`, 
+          createdAt: nowIso(),
+          fileType: file.type,
+          fileSize: file.size
+        });
+      }
+      
+      renderAll();
+    };
+    
+    if (inputUploadNotes) {
+      inputUploadNotes.onchange = async () => {
+        await handleFileUpload(inputUploadNotes.files, 'notes');
+        inputUploadNotes.value = '';
       };
     }
-    if (inputImport) {
-      inputImport.onchange = async () => {
-        const f = inputImport.files && inputImport.files[0]; if (!f) return;
-        const txt = await f.text();
-        try {
-          const obj = JSON.parse(txt);
-          setData({
-            notes: Array.isArray(obj.notes) ? obj.notes : [],
-            syllabus: Array.isArray(obj.syllabus) ? obj.syllabus : [],
-            notices: Array.isArray(obj.notices) ? obj.notices : []
-          });
-          renderAll();
-        } catch (e) { alert('Invalid JSON'); }
-        inputImport.value = '';
+    
+    if (inputUploadSyllabus) {
+      inputUploadSyllabus.onchange = async () => {
+        await handleFileUpload(inputUploadSyllabus.files, 'syllabus');
+        inputUploadSyllabus.value = '';
       };
     }
     if (btnClear) {
